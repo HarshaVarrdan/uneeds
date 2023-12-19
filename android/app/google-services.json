@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "922859701842",
+    "firebase_url": "https://intense-signer-345710-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "intense-signer-345710",
+    "storage_bucket": "intense-signer-345710.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:922859701842:android:6a1f2967362e33b2cc018b",
+        "android_client_info": {
+          "package_name": "com.f2f.uneeds"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "922859701842-l4t3vk2bnoe72392ne9h916t1pb1sk02.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.f2f.uneeds",
+            "certificate_hash": "41aad71d9cd983dc229260936fbfe768dcbf75bb"
+          }
+        },
+        {
+          "client_id": "922859701842-n5o41lnjtrkoaeftiufbbhh6tm6gddrb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmWGp5bIROGiRA-4ocU5f94R3GNbnddwk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "922859701842-n5o41lnjtrkoaeftiufbbhh6tm6gddrb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "922859701842-09ser35k8mjdtubjig70q1ss6r0nan3t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.f2f.uneeds"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
