@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:uneeds/pages/OnBoardingPage.dart';
-import 'package:uneeds/widgets/customwidgets.dart';
+import 'package:uneeds/widgets/CustomWidgets.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});

@@ -3,10 +3,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sms_autofill/sms_autofill.dart';
+import 'package:uneeds/extra/Common_Functions.dart';
 import 'package:uneeds/pages/OtpPage.dart';
 
 import '../extra/FB_LocalFunctions.dart' as firebase_functions;
-import '../widgets/customwidgets.dart';
+import '../widgets/CustomWidgets.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -47,18 +48,9 @@ class _LoginPageState extends State<LoginPage> {
       final phone = await autoFill.hint;
       if (phone == null) return;
       if (!mounted) return;
-      mobileNumber.text = extractLast10Digits(phone);
+      mobileNumber.text = CommonFunctions().extractLast10Digits(phone);
     } on PlatformException catch (e) {
       print('Failed to get mobile number because of: ${e.message}');
-    }
-  }
-
-  String extractLast10Digits(String input) {
-    String digitsOnly = input.replaceAll(RegExp(r'[^0-9]'), '');
-    if (digitsOnly.length >= 10) {
-      return digitsOnly.substring(digitsOnly.length - 10);
-    } else {
-      return digitsOnly;
     }
   }
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:native_shared_preferences/native_shared_preferences.dart';
 import 'package:uneeds/extra/BackendFunctions.dart';
 
@@ -15,12 +16,14 @@ class SharedPrefs {
 
   List<String> get expertJobs => _sharedPrefs.getStringList("ExpertJobs") ?? [];
   String get expertName => _sharedPrefs.getString("ExpertUsername") ?? "";
-  String get userMobileNumber =>
+  String get expertMobileNumber =>
       _sharedPrefs.getString("ExpertMobileNumber") ?? "";
   String get expertEID => _sharedPrefs.getString("ExpertEID") ?? "";
   String get expertGender => _sharedPrefs.getString("ExpertGender") ?? "";
   double get expertRating => _sharedPrefs.getDouble("ExpertRating") ?? 0.0;
   String get expertDOB => _sharedPrefs.getString("ExpertDOB") ?? "";
+
+  bool get detailsFilled => _sharedPrefs.getBool("DetailsFilled") ?? false;
 
   set expertJobs(List<String> value) {
     _sharedPrefs.setStringList("ExpertJobs", value);
@@ -50,8 +53,12 @@ class SharedPrefs {
     _sharedPrefs.setString("ExpertDOB", value);
   }
 
-  void setValuesFromDB(String currentEID) async {
-    final data = await BackendFunctions().checkExpert(currentEID);
+  set detailsFilled(bool value) {
+    _sharedPrefs.setBool("DetailsFilled", value);
+  }
+
+  void setValuesFromDB(String currentEID, BuildContext? context) async {
+    final data = await BackendFunctions().checkExpert(currentEID, context);
 
     if (data['exists']) {
       print(jsonDecode(data['expertdetails']['jobs']));

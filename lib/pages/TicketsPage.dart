@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uneeds/extra/BackendFunctions.dart';
 import 'package:uneeds/extra/SaveUserPreference.dart';
-import 'package:uneeds/widgets/customwidgets.dart';
+import 'package:uneeds/widgets/CustomWidgets.dart';
 
 class TicketsPage extends StatefulWidget {
   const TicketsPage({super.key, required this.Discover});
@@ -19,7 +19,7 @@ class TicketsPageState extends State<TicketsPage> {
   }
 
   Future<List<dynamic>> getTickets() {
-    final data = BackendFunctions().getAllTickets();
+    final data = BackendFunctions().getAllTickets(context);
     return data;
   }
 

@@ -18,15 +18,17 @@ void main() async {
   await SharedPrefs().init();
 
   print(FirebaseAuth.instance.currentUser?.uid);
-  BackendFunctions().checkConnection();
+  BackendFunctions().checkConnection(null);
 
   if (FirebaseAuth.instance.currentUser != null) {
-    FirebaseAuth.instance.currentUser?.uid == SharedPrefs().expertEID
+    FirebaseAuth.instance.currentUser?.uid == SharedPrefs().expertEID &&
+            SharedPrefs().detailsFilled
         ? {
             landingScene = const HomePage(),
             SharedPrefs().setValuesFromDB(
                 FirebaseAuth.instance.currentUser?.uid ??
-                    SharedPrefs().expertEID)
+                    SharedPrefs().expertEID,
+                null)
           }
         : {
             FirebaseAuth.instance.signOut(),
@@ -42,14 +44,14 @@ void main() async {
     title: "UNeeds",
     theme: ThemeData(
         useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xFFDEDEDE),
+        scaffoldBackgroundColor: const Color(0xFFF5F5F7),
         // Define the default brightness and colors.
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.green,
           primary: Colors.white,
           secondary: const Color(0xFF6440FE),
           tertiary: const Color(0xFFC7C9D9),
-          background: Colors.white,
+          background: Color(0xFFF5F5F7),
           // ···
           brightness: Brightness.light,
         ),

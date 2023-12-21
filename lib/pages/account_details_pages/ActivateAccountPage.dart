@@ -1,10 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:uneeds/extra/BackendFunctions.dart';
 import 'package:uneeds/extra/SaveUserPreference.dart';
 import 'package:uneeds/pages/HomePage.dart';
+import 'package:uneeds/pages/account_details_pages/BankDetailsPage.dart';
+import 'package:uneeds/pages/account_details_pages/DocumentsPage.dart';
 import 'package:uneeds/pages/account_details_pages/OptionsPage.dart';
 import 'package:uneeds/pages/account_details_pages/UserDetails.dart';
-import 'package:uneeds/widgets/customwidgets.dart';
+import 'package:uneeds/widgets/CustomWidgets.dart';
 
 class ActivateAccountPage extends StatefulWidget {
   const ActivateAccountPage({super.key});
@@ -34,8 +37,10 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
           SharedPrefs().expertDOB.toString(),
           SharedPrefs().expertEID,
           SharedPrefs().expertGender,
-          SharedPrefs().userMobileNumber,
-          SharedPrefs().expertJobs)) {
+          SharedPrefs().expertMobileNumber,
+          SharedPrefs().expertJobs,
+          context)) {
+        SharedPrefs().detailsFilled = true;
         Navigator.popUntil(context, (route) => route.isFirst);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => const HomePage()));
@@ -44,79 +49,105 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    if (SharedPrefs().expertEID == FirebaseAuth.instance.currentUser?.uid) {
+      if (SharedPrefs().expertName != "" &&
+          SharedPrefs().expertDOB.toString() != "" &&
+          SharedPrefs().expertGender != "" &&
+          SharedPrefs().expertMobileNumber != "") {
+        CompletedTasks["UserInformation"] = true;
+      }
+      if (SharedPrefs().expertJobs != []) {
+        CompletedTasks["Services"] = true;
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFFF5F5F7),
+      appBar: CustomAppBar(
+        PageName:
+            "Account Details (${CompletedTasks.values.where((value) => value == true).length}/5)",
+        context: context,
+        leadingBool: false,
+      ),
       body: SingleChildScrollView(
         child: Container(
-          color: Theme.of(context).colorScheme.primary,
+          //color: Theme.of(context).colorScheme.primary,
           width: MediaQuery.of(context).size.width,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          child: Stack(
-            children: <Widget>[
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 20),
-                  const Text(
-                    "Complete all the steps to Activate your account (2/5)",
-                    style: TextStyle(
-                        fontFamily: "Inter",
-                        fontWeight: FontWeight.w600,
-                        fontSize: 24),
-                  ),
-                  const SizedBox(height: 20),
-                  TaskPageOptions(
-                    title: "Your Information",
-                    imagePath: "assets/images/electrical.png",
-                    value: CompletedTasks["UserInformation"]!,
-                    onValueChange: () async {
-                      setValue(
-                          CompletedTasks,
-                          "UserInformation",
-                          await Navigator.push(
+          padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              TaskPageOptions(
+                title: "Your Information",
+                value: CompletedTasks["UserInformation"]!,
+                onValueChange: () async {
+                  setValue(
+                      CompletedTasks,
+                      "UserInformation",
+                      await Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => const UserDetailsPage()),
-                          ));
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  TaskPageOptions(
-                    title: "Your Services",
-                    imagePath: "assets/images/electrical.png",
-                    value: CompletedTasks["Services"]!,
-                    onValueChange: () async {
-                      setValue(
-                          CompletedTasks,
-                          "Services",
-                          await Navigator.push(
+                          ) ??
+                          false);
+                },
+              ),
+              const SizedBox(height: 20),
+              TaskPageOptions(
+                title: "Your Services",
+                value: CompletedTasks["Services"]!,
+                onValueChange: () async {
+                  setValue(
+                      CompletedTasks,
+                      "Services",
+                      await Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => const OptionsPage()),
-                          ));
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  TaskPageOptions(
-                    title: "Documents",
-                    imagePath: "assets/images/plumbing.png",
-                    value: CompletedTasks["Documents"]!,
-                    onValueChange: () {
-                      //setValue(CompletedTasks, "Documents", value);
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  TaskPageOptions(
-                    title: "Bank Details",
-                    imagePath: "assets/images/carpentry.png",
-                    value: CompletedTasks["BankDetails"]!,
-                    onValueChange: () {
-                      //setValue(CompletedTasks, "BankDetails", value);
-                    },
-                  ),
-                ],
+                          ) ??
+                          false);
+                },
+              ),
+              const SizedBox(height: 20),
+              TaskPageOptions(
+                title: "Documents",
+                value: CompletedTasks["Documents"]!,
+                onValueChange: () async {
+                  setValue(
+                      CompletedTasks,
+                      "Documents",
+                      await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const DocumentsPage()),
+                          ) ??
+                          false);
+                },
+              ),
+              const SizedBox(height: 20),
+              TaskPageOptions(
+                title: "Bank Details",
+                value: CompletedTasks["BankDetails"]!,
+                onValueChange: () async {
+                  setValue(
+                      CompletedTasks,
+                      "BankDetails",
+                      await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const BankDetailsPage()),
+                          ) ??
+                          false);
+                },
               ),
             ],
           ),

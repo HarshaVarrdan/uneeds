@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:uneeds/extra/BackendFunctions.dart';
+import 'package:uneeds/extra/Common_Functions.dart';
 import 'package:uneeds/extra/SaveUserPreference.dart';
 import 'package:uneeds/pages/HomePage.dart';
 import 'package:uneeds/pages/account_details_pages/ActivateAccountPage.dart';
@@ -96,7 +97,8 @@ class _OtpPageState extends State<OtpPage> {
               {
                 print(auth.currentUser?.uid.toString()),
                 BackendFunctions()
-                    .checkExpert(auth.currentUser?.uid.toString() ?? "")
+                    .checkExpert(
+                        auth.currentUser?.uid.toString() ?? "", context)
                     .then(
                       (data) => {
                         if (data['exists'])
@@ -104,8 +106,8 @@ class _OtpPageState extends State<OtpPage> {
                             print(data['expertdetails']),
                             SharedPrefs().expertEID =
                                 auth.currentUser?.uid.toString() ?? "",
-                            SharedPrefs()
-                                .setValuesFromDB(SharedPrefs().expertEID),
+                            SharedPrefs().setValuesFromDB(
+                                SharedPrefs().expertEID, context),
                             Navigator.of(context)
                                 .popUntil((route) => route.isFirst),
                             Navigator.pushReplacement(
@@ -128,20 +130,8 @@ class _OtpPageState extends State<OtpPage> {
               }
             else
               {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    backgroundColor: Color(0x00151617),
-                    content: Text(
-                      "Wrong Otp ! Try Again !",
-                      style: TextStyle(
-                        fontFamily: "DMSans",
-                        fontWeight: FontWeight.w700,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    duration: Duration(seconds: 3),
-                  ),
-                )
+                CommonFunctions()
+                    .showMessageSnackBar("Wrong Otp ! Try Again !", context)
               }
           },
         );
@@ -163,193 +153,188 @@ class _OtpPageState extends State<OtpPage> {
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
         height: MediaQuery.of(context).size.height,
-        child: Stack(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 2,
-                  //width: MediaQuery.of(context).size.width,
-                  child: Column(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 2,
+              //width: MediaQuery.of(context).size.width,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 5),
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 5),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "OTP Verification",
-                            style: TextStyle(
-                              fontFamily: "DMSans",
-                              fontWeight: FontWeight.w600,
-                              fontSize: 30,
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                const TextSpan(
-                                  text: 'Enter the verification code sent to ',
-                                  style: TextStyle(
-                                    color: Color(0xFF808080),
-                                    fontFamily: "DMSans",
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: widget.userPhoneNumber.toString(),
-                                  style: const TextStyle(
-                                    color: Color(0xFF151617),
-                                    fontSize: 16,
-                                    fontFamily: 'DMSans',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                        ],
+                      const Text(
+                        "OTP Verification",
+                        style: TextStyle(
+                          fontFamily: "DMSans",
+                          fontWeight: FontWeight.w600,
+                          fontSize: 30,
+                        ),
+                        textAlign: TextAlign.left,
                       ),
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: List.generate(
-                              6,
-                              (index) => SizedBox(
-                                width: MediaQuery.of(context).size.width / 8,
-                                height: MediaQuery.of(context).size.height / 12,
-                                //color: Colors.redAccent,
-                                child: TextField(
-                                  controller: _controllers[index],
-                                  keyboardType: TextInputType.number,
-                                  textAlign: TextAlign.center,
-                                  maxLength: 1,
-                                  focusNode: _focusNodes[index],
-                                  onChanged: (value) {
-                                    if (value.isNotEmpty) {
-                                      if (index < 5) {
-                                        _focusNodes[index].unfocus();
-                                        _focusNodes[index + 1].requestFocus();
-                                      } else {
-                                        _focusNodes[index].unfocus();
-                                      }
-                                    }
-                                    _controllers[index].addListener(
-                                      () {
-                                        if (_controllers[index].text.isEmpty) {
-                                          if (index > 0) {
-                                            _focusNodes[index].unfocus();
-                                            _focusNodes[index - 1]
-                                                .requestFocus();
-                                          }
-                                        }
-                                      },
-                                    );
-                                  },
-                                  decoration: InputDecoration(
-                                    counterText: "",
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary,
-                                          width: 1),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary,
-                                          width: 1),
-                                    ),
-                                  ),
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    color: Color(0xFF151617),
-                                    fontFamily: "DMSans",
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                  textAlignVertical: TextAlignVertical.center,
-                                  cursorColor: const Color(0xFF151617),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          TextButton(
-                            onPressed: () {
-                              verifyOTP(context);
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(
-                                  Theme.of(context).colorScheme.secondary),
-                              fixedSize: MaterialStatePropertyAll(Size(
-                                  MediaQuery.of(context).size.width,
-                                  MediaQuery.of(context).size.height / 12)),
-                              shape: MaterialStatePropertyAll(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                            ),
-                            child: const Text(
-                              "Verify",
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            const TextSpan(
+                              text: 'Enter the verification code sent to ',
                               style: TextStyle(
+                                color: Color(0xFF808080),
                                 fontFamily: "DMSans",
-                                fontWeight: FontWeight.w600,
-                                fontSize: 20,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16,
                               ),
                             ),
-                          ),
-                        ],
+                            TextSpan(
+                              text: widget.userPhoneNumber.toString(),
+                              style: const TextStyle(
+                                color: Color(0xFF151617),
+                                fontSize: 16,
+                                fontFamily: 'DMSans',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.left,
                       ),
                     ],
                   ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        const TextSpan(
-                          text: 'Didn\'t you receive the OTP? ',
-                          style: TextStyle(
-                            color: Color(0xFF7E7E7E),
-                            fontSize: 15,
-                            fontFamily: 'DMSans',
-                            fontWeight: FontWeight.w400,
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: List.generate(
+                          6,
+                          (index) => SizedBox(
+                            width: MediaQuery.of(context).size.width / 8,
+                            height: MediaQuery.of(context).size.height / 12,
+                            //color: Colors.redAccent,
+                            child: TextField(
+                              controller: _controllers[index],
+                              keyboardType: TextInputType.number,
+                              textAlign: TextAlign.center,
+                              maxLength: 1,
+                              focusNode: _focusNodes[index],
+                              onChanged: (value) {
+                                if (value.isNotEmpty) {
+                                  if (index < 5) {
+                                    _focusNodes[index].unfocus();
+                                    _focusNodes[index + 1].requestFocus();
+                                  } else {
+                                    _focusNodes[index].unfocus();
+                                  }
+                                }
+                                _controllers[index].addListener(
+                                  () {
+                                    if (_controllers[index].text.isEmpty) {
+                                      if (index > 0) {
+                                        _focusNodes[index].unfocus();
+                                        _focusNodes[index - 1].requestFocus();
+                                      }
+                                    }
+                                  },
+                                );
+                              },
+                              decoration: InputDecoration(
+                                counterText: "",
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                      width: 1),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                      width: 1),
+                                ),
+                              ),
+                              style: const TextStyle(
+                                fontSize: 20,
+                                color: Color(0xFF151617),
+                                fontFamily: "DMSans",
+                                fontWeight: FontWeight.w700,
+                              ),
+                              textAlignVertical: TextAlignVertical.center,
+                              cursorColor: const Color(0xFF151617),
+                            ),
                           ),
                         ),
-                        TextSpan(
-                          text: _remainingSeconds == 0
-                              ? "Resend OTP"
-                              : "Resend OTP ($_remainingSeconds)",
+                      ),
+                      const SizedBox(height: 20),
+                      TextButton(
+                        onPressed: () {
+                          verifyOTP(context);
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStatePropertyAll(
+                              Theme.of(context).colorScheme.secondary),
+                          fixedSize: MaterialStatePropertyAll(Size(
+                              MediaQuery.of(context).size.width,
+                              MediaQuery.of(context).size.height / 12)),
+                          shape: MaterialStatePropertyAll(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                        child: const Text(
+                          "Verify",
                           style: TextStyle(
-                            color: canResendOTP
-                                ? Theme.of(context).colorScheme.secondary
-                                : Colors.black12,
-                            fontSize: 15,
-                            fontFamily: 'DMSans',
+                            fontFamily: "DMSans",
                             fontWeight: FontWeight.w600,
+                            fontSize: 20,
                           ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => _resendOTP(),
                         ),
-                      ],
-                    ),
-                    textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
+                ],
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    const TextSpan(
+                      text: 'Didn\'t you receive the OTP? ',
+                      style: TextStyle(
+                        color: Color(0xFF7E7E7E),
+                        fontSize: 15,
+                        fontFamily: 'DMSans',
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    TextSpan(
+                      text: _remainingSeconds == 0
+                          ? "Resend OTP"
+                          : "Resend OTP ($_remainingSeconds)",
+                      style: TextStyle(
+                        color: canResendOTP
+                            ? Theme.of(context).colorScheme.secondary
+                            : Colors.black12,
+                        fontSize: 15,
+                        fontFamily: 'DMSans',
+                        fontWeight: FontWeight.w600,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => _resendOTP(),
+                    ),
+                  ],
                 ),
-              ],
+                textAlign: TextAlign.center,
+              ),
             ),
           ],
         ),

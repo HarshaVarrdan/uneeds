@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uneeds/extra/BackendFunctions.dart';
 import 'package:uneeds/extra/SaveUserPreference.dart';
-import 'package:uneeds/widgets/customwidgets.dart';
+import 'package:uneeds/widgets/CustomWidgets.dart';
 
 class JobHistoryPage extends StatefulWidget {
   const JobHistoryPage({super.key});
@@ -12,7 +12,7 @@ class JobHistoryPage extends StatefulWidget {
 
 class _JobHistoryPageState extends State<JobHistoryPage> {
   Future<List<dynamic>> getTickets() {
-    final data = BackendFunctions().getAllTickets();
+    final data = BackendFunctions().getAllTickets(context);
     return data;
   }
 

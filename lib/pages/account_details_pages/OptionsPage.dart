@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uneeds/extra/SaveUserPreference.dart';
-import 'package:uneeds/widgets/customwidgets.dart';
+import 'package:uneeds/widgets/CustomWidgets.dart';
 
 class OptionsPage extends StatefulWidget {
   const OptionsPage({super.key});
@@ -26,132 +26,6 @@ class _OptionsPageState extends State<OptionsPage> {
     'Carpenter': false,
   };
 
-  Container questionContainer() {
-    final container = [
-      Container(
-        color: Theme.of(context).colorScheme.primary,
-        width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Stack(
-          children: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 4,
-                  child: const Image(
-                    image: AssetImage("assets/images/service_logo.png"),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  "How would you like to join us?",
-                  style: TextStyle(
-                      fontFamily: "Inter",
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18),
-                ),
-                const SizedBox(height: 20),
-                InfoPageOptions(
-                  title: "Individual",
-                  imagePath: "",
-                  value: selectedItemsA["Individual"]!,
-                  onValueChange: (value) {
-                    print(
-                        "Individual ${selectedItemsA["Individual"]} ${value}");
-                    setValue(selectedItemsA, "Individual", value);
-                    print("Business ${selectedItemsA["Business"]} ${!value}");
-                    setValue(selectedItemsA, "Business", !value);
-                  },
-                ),
-                const SizedBox(height: 20),
-                InfoPageOptions(
-                  title: "Business",
-                  imagePath: "",
-                  value: selectedItemsA["Business"]!,
-                  onValueChange: (value) {
-                    print(
-                        "Individual ${selectedItemsA["Individual"]} ${!value}");
-                    setValue(selectedItemsA, "Individual", !value);
-                    print("Business ${selectedItemsA["Business"]} ${value}");
-                    setValue(selectedItemsA, "Business", value);
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-      Container(
-        color: Theme.of(context).colorScheme.primary,
-        width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Stack(
-          children: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 4,
-                  child: const Image(
-                    image: AssetImage("assets/images/service_logo.png"),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  "How would you like to join us?",
-                  style: TextStyle(
-                      fontFamily: "Inter",
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18),
-                ),
-                const SizedBox(height: 20),
-                InfoPageOptions(
-                  title: "Electrician",
-                  imagePath: "assets/images/electrical.png",
-                  value: selectedItemsB["Electrician"]!,
-                  onValueChange: (bool value) {
-                    setValue(selectedItemsB, "Electrician", value);
-                  },
-                ),
-                const SizedBox(height: 20),
-                InfoPageOptions(
-                  title: "Plumber",
-                  imagePath: "assets/images/plumbing.png",
-                  value: selectedItemsB["Plumber"]!,
-                  onValueChange: (bool value) {
-                    setValue(selectedItemsB, "Plumber", value);
-                  },
-                ),
-                const SizedBox(height: 20),
-                InfoPageOptions(
-                  title: "Carpenter",
-                  imagePath: "assets/images/carpentry.png",
-                  value: selectedItemsB["Carpenter"]!,
-                  onValueChange: (bool value) {
-                    setValue(selectedItemsB, "Carpenter", value);
-                  },
-                ),
-                const SizedBox(height: 20),
-                InfoPageOptions(
-                  title: "AC Mechanic",
-                  imagePath: "assets/images/ac_service.png",
-                  value: selectedItemsB["AC Mechanic"]!,
-                  onValueChange: (bool value) {
-                    setValue(selectedItemsB, "AC Mechanic", value);
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    ];
-    return container[currentPageIndex];
-  }
-
   void setValue(Map map, String boolName, bool value) {
     setState(() {
       map[boolName] = value;
@@ -159,19 +33,22 @@ class _OptionsPageState extends State<OptionsPage> {
   }
 
   void onContinueClicked() {
-    if (currentPageIndex == 0) {
-      setState(() {
-        currentPageIndex += 1;
-      });
-    } else {
-      selectedItemsB.forEach((key, value) {
-        if (value) {
-          selectedJobs.add(key);
-          SharedPrefs().expertJobs = selectedJobs;
-        }
-      });
+    selectedItemsB.forEach((key, value) {
+      if (value) {
+        selectedJobs.add(key);
+        SharedPrefs().expertJobs = selectedJobs;
+      }
+    });
 
-      Navigator.pop(context, true);
+    Navigator.pop(context, selectedJobs.isNotEmpty);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    for (var element in SharedPrefs().expertJobs) {
+      selectedItemsB[element] = true;
     }
   }
 
@@ -184,15 +61,7 @@ class _OptionsPageState extends State<OptionsPage> {
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              onPressed: () async {
-                if (currentPageIndex > 0) {
-                  setState(() {
-                    currentPageIndex -= 1;
-                  });
-                } else {
-                  Navigator.pop(context);
-                }
-              },
+              onPressed: () {},
               icon: const Icon(
                 Icons.keyboard_arrow_left,
                 size: 50,
@@ -202,7 +71,73 @@ class _OptionsPageState extends State<OptionsPage> {
           },
         ),
       ),
-      body: SingleChildScrollView(child: questionContainer()),
+      body: SingleChildScrollView(
+        child: Container(
+          color: Theme.of(context).colorScheme.primary,
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: Stack(
+            children: <Widget>[
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 4,
+                    child: const Image(
+                      image: AssetImage("assets/images/service_logo.png"),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    "How would you like to join us?",
+                    style: TextStyle(
+                        fontFamily: "Inter",
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18),
+                  ),
+                  const SizedBox(height: 20),
+                  InfoPageOptions(
+                    title: "Electrician",
+                    imagePath: "assets/images/electrical.png",
+                    value: selectedItemsB["Electrician"]!,
+                    onValueChange: (bool value) {
+                      setValue(selectedItemsB, "Electrician", value);
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  InfoPageOptions(
+                    title: "Plumber",
+                    imagePath: "assets/images/plumbing.png",
+                    value: selectedItemsB["Plumber"]!,
+                    onValueChange: (bool value) {
+                      setValue(selectedItemsB, "Plumber", value);
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  InfoPageOptions(
+                    title: "Carpenter",
+                    imagePath: "assets/images/carpentry.png",
+                    value: selectedItemsB["Carpenter"]!,
+                    onValueChange: (bool value) {
+                      setValue(selectedItemsB, "Carpenter", value);
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  InfoPageOptions(
+                    title: "AC Mechanic",
+                    imagePath: "assets/images/ac_service.png",
+                    value: selectedItemsB["AC Mechanic"]!,
+                    onValueChange: (bool value) {
+                      setValue(selectedItemsB, "AC Mechanic", value);
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
         child: TextButton(

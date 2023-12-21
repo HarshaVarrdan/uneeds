@@ -19,12 +19,6 @@ class _HomePageState extends State<HomePage>
 
   late TabController jobsTabC;
 
-  /*final Screens = [
-    const TicketsPage(),
-    const EarningsPage(),
-    const ProfilePage()
-  ];*/
-
   AppBar CustomAppBars(int index) {
     List<AppBar> CustomAppBar = [
       AppBar(

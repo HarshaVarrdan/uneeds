@@ -59,6 +59,7 @@ class _InfoPageOptionState extends State<InfoPageOptions> {
         height: MediaQuery.of(context).size.height / 8,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: ShapeDecoration(
+          color: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
               side: BorderSide(
@@ -177,7 +178,6 @@ class _TaskPageOptionsState extends State<TaskPageOptions> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (isClicked) return;
         onClicked();
       },
       child: Container(
@@ -185,6 +185,7 @@ class _TaskPageOptionsState extends State<TaskPageOptions> {
         height: MediaQuery.of(context).size.height / 8,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: ShapeDecoration(
+          color: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
               side: BorderSide(
@@ -208,7 +209,7 @@ class _TaskPageOptionsState extends State<TaskPageOptions> {
                         fontSize: 18,
                       ),
                     ),
-                    CheckBox(
+                    TickBox(
                       value: isClicked,
                       onChanged: (value) {
                         onClicked();
@@ -390,7 +391,7 @@ class _TickBoxState extends State<TickBox> {
                 child: Icon(
                 Icons.check,
                 color: Colors.white,
-                size: 10,
+                size: 25,
               ))
             : null,
       ),
@@ -658,7 +659,7 @@ class CustomDropdownMenu extends StatefulWidget {
 }
 
 class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
-  late String selectedItem = "Male";
+  late String selectedItem = widget.values.first;
 
   @override
   Widget build(BuildContext context) {
@@ -821,7 +822,8 @@ class OpenTicketCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5),
                       color: const Color(0xFFD9D9D9),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
                     child: const Center(
                       child: Text(
                         "2.3 Km Away",
@@ -1022,7 +1024,8 @@ class _SettingsCardsAState extends State<SettingsCardsA> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(7),
                     color: const Color(0xFFD9D9D9)),
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 child: const Row(
                   children: [
                     Image(
@@ -1208,6 +1211,60 @@ class ServiceHistoryCard extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const CustomAppBar(
+      {super.key,
+      required this.PageName,
+      required this.context,
+      this.leadingBool = true,
+      this.defaultReturn});
+
+  final String PageName;
+  final bool? leadingBool;
+  final dynamic defaultReturn;
+  final BuildContext context;
+
+  @override
+  Size get preferredSize =>
+      Size.fromHeight(kToolbarHeight + MediaQuery.of(context).size.height / 10);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      leading: leadingBool ?? false
+          ? IconButton(
+              onPressed: () {
+                Navigator.pop(context, defaultReturn);
+              },
+              icon: Icon(
+                Icons.arrow_back_sharp,
+                size: 25,
+              ),
+            )
+          : null,
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      bottom: PreferredSize(
+        preferredSize: Size(MediaQuery.of(context).size.width,
+            MediaQuery.of(context).size.height / 10),
+        child: Padding(
+          padding: EdgeInsets.only(left: 20, right: 20, bottom: 50),
+          child: Center(
+            child: Text(
+              PageName.toString(),
+              style: TextStyle(
+                fontFamily: "DMSans",
+                fontWeight: FontWeight.w700,
+                fontSize: 24,
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
       ),
