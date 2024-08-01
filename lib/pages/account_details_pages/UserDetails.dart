@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:uneeds/extra/Common_Functions.dart';
 import 'package:uneeds/extra/Location_Functions.dart';
 import 'package:uneeds/extra/SaveUserPreference.dart';
+import 'package:uneeds/extra/TempValues.dart';
 import 'package:uneeds/pages/CameraPage.dart';
 import 'package:uneeds/widgets/CustomWidgets.dart';
 
@@ -24,7 +25,7 @@ class UserDetailsPage extends StatefulWidget {
 class _UserDetailsPageState extends State<UserDetailsPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  late String DOB = "DD/MM/YY";
+  late String dob = "DD/MM/YY";
 
   TextEditingController expertNameC = TextEditingController();
   TextEditingController expertDOBC = TextEditingController();
@@ -51,7 +52,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       displayNameNoCountryCode: "IN",
       e164Key: "");
 
-  void onContinueClicked() {
+  void onContinueClicked() async {
     if (expertMobileNumberC.text != "" &&
         expertDOBC.text != "" &&
         expertNameC.text != "" &&
@@ -65,7 +66,9 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       SharedPrefs().expertDOB = expertDOBC.text;
       SharedPrefs().expertGender = userGender;
 
-      Navigator.pop(context, true);
+      TempValues().temp["expertPhoto"] = _image;
+
+      Navigator.pop(context, {"result": true, "file": _image});
     }
   }
 
@@ -84,6 +87,8 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
       userGender = SharedPrefs().expertGender;
       expertNameC.text = SharedPrefs().expertName;
     }
+
+    _image = TempValues().temp["expertPhoto"] ?? File("");
 
     LocationFunctions().getCurrentPosition(context).then((result) {
       if (!result.containsKey("error") && result.isNotEmpty) {
@@ -126,6 +131,8 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
           padding: const EdgeInsets.all(10.0),
           child: Container(
             width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(7), color: Colors.white),
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -140,16 +147,14 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                       onTap: () async {
                         final cameras = await availableCameras();
 
-                        final tempImage = await Navigator.push(
+                        final String tempImage = await Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => CameraPage(
-                                      camera: cameras[1],
-                                    )));
-                        //await CommonFunctions().getImage();
-                        //await Navigator.push(context,MaterialPageRoute(builder: (context) => CameraPage(camera: cameras[1],)));
+                                    camera: cameras[1],
+                                    imageName: "expertphoto.jpg")));
                         setState(() {
-                          _image = File(tempImage!.path);
+                          _image = File(tempImage);
                         });
                         print(_image);
                       },
@@ -174,7 +179,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                                     fit: BoxFit.cover,
                                   ),
                                 )
-                              : Column(
+                              : const Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     ImageIcon(
@@ -193,7 +198,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                                 ),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -276,7 +281,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                     ),
                     Expanded(
                       child: CustomDropdownMenu(
-                        values: ["M", "F"],
+                        values: const ["M", "F"],
                         onValueChange: (String value) {
                           userGender = value;
                         },

@@ -65,11 +65,11 @@ class TicketsPageState extends State<TicketsPage> {
               return Column(
                 children: List.generate(
                   widget.Discover ? openTickets.length : acceptedTickets.length,
-                  (index) => OpenTicketCard(
-                    TicketData: widget.Discover
-                        ? openTickets[index]
-                        : acceptedTickets[index],
-                  ),
+                  (index) => widget.Discover
+                      ? OpenTicketCard(
+                          TicketData: openTickets[index],
+                        )
+                      : AcceptedTicketCard(TicketData: acceptedTickets[index]),
                 ),
               );
             }

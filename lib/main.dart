@@ -44,14 +44,14 @@ void main() async {
     title: "UNeeds",
     theme: ThemeData(
         useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xFFF5F5F7),
+        scaffoldBackgroundColor: const Color(0xFFDEDEDE),
         // Define the default brightness and colors.
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.green,
           primary: Colors.white,
           secondary: const Color(0xFF6440FE),
-          tertiary: const Color(0xFFC7C9D9),
-          background: Color(0xFFF5F5F7),
+          tertiary: const Color(0xFFDEDEDE),
+          background: Color(0xFFDEDEDE),
           // ···
           brightness: Brightness.light,
         ),

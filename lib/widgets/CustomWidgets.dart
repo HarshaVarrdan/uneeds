@@ -523,6 +523,8 @@ class CustomTextFieldB extends StatelessWidget {
             cursorColor: const Color(0xFF202020),
             controller: controller,
             decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
               floatingLabelAlignment: FloatingLabelAlignment.start,
               prefix: prefix != null
                   ? Row(
@@ -609,6 +611,7 @@ class CustomDOBField extends StatelessWidget {
           height: MediaQuery.of(context).size.height / 16,
           //width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
+              color: Colors.white,
               border: Border.all(color: const Color(0xFF7E7E7E), width: 1.0),
               borderRadius: BorderRadius.circular(10.0)),
           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -685,6 +688,8 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
         Container(
           height: MediaQuery.of(context).size.height / 16,
           decoration: BoxDecoration(
+            color: Colors.white,
+
             border: Border.all(
               color: const Color(0xFF808080), // Set the color of the border
               width: 1.0, // Set the width of the border
@@ -925,6 +930,212 @@ class OpenTicketCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  Text(
+                    "Rs.${TicketData["service_cost"].toString()}",
+                    style: const TextStyle(
+                        fontFamily: "DMSans",
+                        fontWeight: FontWeight.w600,
+                        fontSize: 24,
+                        color: Color(0xFF202020)),
+                  ),
+                ],
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    "Accept",
+                    style: TextStyle(
+                        fontFamily: "DMSans",
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
+                        color: Color(0xFFFFFFFF)),
+                  ),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(
+                          Theme.of(context).colorScheme.secondary),
+                      padding: const MaterialStatePropertyAll(
+                        EdgeInsets.symmetric(vertical: 15),
+                      ),
+                      shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)))),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class AcceptedTicketCard extends StatelessWidget {
+  const AcceptedTicketCard({super.key, required this.TicketData});
+
+  final Map<String, dynamic> TicketData;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 10,
+      child: Container(
+        height: MediaQuery.of(context).size.height / 2.4,
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(7), color: Colors.white),
+        child: IntrinsicHeight(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                TicketData["service_name"].toString(),
+                style: const TextStyle(
+                    fontFamily: "DMSans",
+                    fontWeight: FontWeight.w700,
+                    fontSize: 24,
+                    color: Color(0xFF202020)),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const ImageIcon(
+                        AssetImage(
+                          "assets/images/location_dark.png",
+                        ),
+                        size: 20,
+                        color: Color(0xFF808080),
+                      ),
+                      Text(
+                        TicketData["ticket_location"].toString() == "{}"
+                            ? "Test Area"
+                            : TicketData["ticket_location"].toString(),
+                        style: const TextStyle(
+                            fontFamily: "DMSans",
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                            color: Color(0xFF808080)),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: const Color(0xFFD9D9D9),
+                    ),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
+                    child: const Center(
+                      child: Text(
+                        "2.3 Km Away",
+                        style: TextStyle(
+                            fontFamily: "DMSans",
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                            color: Color(0xFF202020)),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  Text(
+                    DateFormat('dd MMM y')
+                        .format(DateTime.parse(TicketData["service_time"])),
+                    style: TextStyle(
+                        fontFamily: "DMSans",
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: Theme.of(context).colorScheme.secondary),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Colors.white,
+                      border: Border.all(
+                        color: const Color(0xFFD9D9D9),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "AFTER",
+                              style: TextStyle(
+                                  fontFamily: "DMSans",
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  color: Color(0xFF808080)),
+                            ),
+                            Text(
+                              DateFormat('hh:mm a').format(
+                                  DateTime.parse(TicketData["service_time"])),
+                              style: const TextStyle(
+                                  fontFamily: "DMSans",
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                  color: Color(0xFF202020)),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                          width: MediaQuery.of(context).size.width / 3,
+                          child: Divider(
+                            height: 10,
+                            thickness: 1,
+                            indent: 0,
+                            endIndent: 0,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            const Text(
+                              "BEFORE",
+                              style: TextStyle(
+                                  fontFamily: "DMSans",
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  color: Color(0xFF808080)),
+                            ),
+                            Text(
+                              DateFormat('hh:mm a').format(
+                                  DateTime.parse(TicketData["service_time"])
+                                      .add(const Duration(hours: 2))),
+                              style: const TextStyle(
+                                  fontFamily: "DMSans",
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                  color: Color(0xFF202020)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Rs.${TicketData["service_cost"].toString()}",
+                    style: TextStyle(
+                        fontFamily: "DMSans",
+                        fontWeight: FontWeight.w600,
+                        fontSize: 24,
+                        color: Theme.of(context).colorScheme.secondary),
+                  ),
                   Text(
                     "Rs.${TicketData["service_cost"].toString()}",
                     style: const TextStyle(
@@ -1266,6 +1477,54 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class SecondaryFileButton extends StatelessWidget {
+  const SecondaryFileButton(
+      {super.key,
+      required this.buttonTitle,
+      required this.upload,
+      required this.onTap});
+
+  final String buttonTitle;
+  final bool upload;
+  final VoidCallback onTap;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: MediaQuery.of(context).size.height / 16,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.tertiary,
+          borderRadius: BorderRadius.circular(7),
+          border: Border.all(
+            color: Color(0xFFC7C9D9),
+          ),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (upload)
+              ImageIcon(
+                AssetImage("assets/images/upload.png"),
+                size: 30,
+              ),
+            Text(
+              upload ? "Upload $buttonTitle" : buttonTitle,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+                fontFamily: "DMSans",
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+            )
+          ],
         ),
       ),
     );

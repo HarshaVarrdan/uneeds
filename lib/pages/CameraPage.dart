@@ -1,11 +1,14 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:uneeds/widgets/CustomWidgets.dart';
 
 class CameraPage extends StatefulWidget {
-  const CameraPage({super.key, required this.camera});
+  const CameraPage({super.key, required this.camera, required this.imageName});
 
   final CameraDescription camera;
+  final String imageName;
 
   @override
   State<CameraPage> createState() => _CameraPageState();
@@ -51,7 +54,7 @@ class _CameraPageState extends State<CameraPage> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: Theme.of(context).colorScheme.secondary,
+                              color: Color(0xFF202020),
                               width: 1,
                             ),
                           ),
@@ -75,11 +78,15 @@ class _CameraPageState extends State<CameraPage> {
                       await _initializeControllerFuture;
                       final image = await _controller.takePicture();
 
+                      final String renamedFilePath =
+                          '/data/user/0/com.f2f.uneeds/cache/${widget.imageName}';
+                      await File(image.path).rename(renamedFilePath);
+
                       setState(() {
                         _image = _image;
                       });
                       if (!mounted) return;
-                      Navigator.pop(context, image);
+                      Navigator.pop(context, renamedFilePath);
                     } catch (e) {
                       print(e);
                     }

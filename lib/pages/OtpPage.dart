@@ -95,12 +95,14 @@ class _OtpPageState extends State<OtpPage> {
           (value) => {
             if (value != null)
               {
+                print(value),
                 print(auth.currentUser?.uid.toString()),
                 BackendFunctions()
                     .checkExpert(
                         auth.currentUser?.uid.toString() ?? "", context)
                     .then(
                       (data) => {
+                        print(data),
                         if (data['exists'])
                           {
                             print(data['expertdetails']),

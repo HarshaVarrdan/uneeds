@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:uneeds/extra/BackendFunctions.dart';
+import 'package:uneeds/extra/FB_LocalFunctions.dart';
 import 'package:uneeds/extra/SaveUserPreference.dart';
+import 'package:uneeds/extra/TempValues.dart';
 import 'package:uneeds/pages/HomePage.dart';
 import 'package:uneeds/pages/account_details_pages/BankDetailsPage.dart';
 import 'package:uneeds/pages/account_details_pages/DocumentsPage.dart';
@@ -17,6 +21,8 @@ class ActivateAccountPage extends StatefulWidget {
 }
 
 class _ActivateAccountPageState extends State<ActivateAccountPage> {
+  late File expertPhoto;
+
   Map<String, bool> CompletedTasks = {
     "UserInformation": false,
     "Documents": false,
@@ -40,6 +46,8 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
           SharedPrefs().expertMobileNumber,
           SharedPrefs().expertJobs,
           context)) {
+        await FirebaseFunc().uploadFile(
+            SharedPrefs().expertEID, "expertphoto.jpg", expertPhoto);
         SharedPrefs().detailsFilled = true;
         Navigator.popUntil(context, (route) => route.isFirst);
         Navigator.pushReplacement(
@@ -90,15 +98,15 @@ class _ActivateAccountPageState extends State<ActivateAccountPage> {
                 title: "Your Information",
                 value: CompletedTasks["UserInformation"]!,
                 onValueChange: () async {
-                  setValue(
-                      CompletedTasks,
-                      "UserInformation",
-                      await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const UserDetailsPage()),
-                          ) ??
-                          false);
+                  Map<String, dynamic> result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const UserDetailsPage()),
+                  );
+                  print(TempValues().temp["expertPhoto"]);
+                  expertPhoto = result["file"];
+                  setValue(CompletedTasks, "UserInformation",
+                      result["result"] ?? false);
                 },
               ),
               const SizedBox(height: 20),

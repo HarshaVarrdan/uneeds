@@ -12,6 +12,9 @@ class DocumentsPage extends StatefulWidget {
 class _DocumentsPageState extends State<DocumentsPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  final TextEditingController aadharNumberC = TextEditingController();
+  final TextEditingController panNumberC = TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -27,24 +30,108 @@ class _DocumentsPageState extends State<DocumentsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: CustomAppBar(
         PageName: "Documents",
         context: context,
       ),
       body: SingleChildScrollView(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [],
+            children: [
+              const Text(
+                "The updated Details will be Verified and updated within 48hours",
+                style: TextStyle(
+                    fontFamily: "DMSans",
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(7),
+                    color: Colors.white),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Aadhar Card",
+                      style: TextStyle(
+                          fontFamily: "DMSans",
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    SizedBox(height: 10),
+                    CustomTextFieldB(
+                        hintText: "Your Aadhar Card Number",
+                        controller: aadharNumberC,
+                        labelText: "Aadhar Number"),
+                    SizedBox(height: 10),
+                    SecondaryFileButton(
+                      buttonTitle: "Aadhar Card - Front",
+                      upload: true,
+                      onTap: () {},
+                    ),
+                    SizedBox(height: 10),
+                    SecondaryFileButton(
+                      buttonTitle: "Aadhar Card - Back",
+                      upload: true,
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 10),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(7),
+                    color: Colors.white),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "PAN Card",
+                      style: TextStyle(
+                          fontFamily: "DMSans",
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    SizedBox(height: 10),
+                    CustomTextFieldB(
+                        hintText: "Your PAN Card Number",
+                        controller: panNumberC,
+                        labelText: "PAN Number"),
+                    SizedBox(height: 10),
+                    SecondaryFileButton(
+                      buttonTitle: "PAN Card - Front",
+                      upload: true,
+                      onTap: () {},
+                    ),
+                    SizedBox(height: 10),
+                    SecondaryFileButton(
+                      buttonTitle: "PAN Card - Back",
+                      upload: true,
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
       bottomNavigationBar: Container(
+        color: Colors.transparent,
         padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
         child: TextButton(
           onPressed: onContinueClicked,
